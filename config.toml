@@ -11,14 +11,14 @@ theme = "printwire-theme"
   fontPrimary    = "Orbitron"
   fontSecondary  = "Space Grotesk"
   fontURL        = "https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
-  ogImage        = "https://images.unsplash.com/photo-1685708716815-94c588417c27?w=1200&q=80"
+  ogImage    = "/images/hero.png"
   favicon        = "⚗️"
   pubmedQuery    = "metal+powder+DMLS+SLM+feedstock+atomization+additive+manufacturing"
   contactEmail   = "maxdavisgroup@gmail.com"
   web3formsKey   = "6f33053b-6d08-414b-9615-665f88c98da8"
   xometryId      = "XOMETRY_AFFILIATE_ID"
   domain         = "metalpowder.co"
-  heroImage      = "https://images.unsplash.com/photo-1685708716815-94c588417c27?w=1200&q=80"
+  heroImage    = "/images/hero.png"
 
 [[params.stats]]
   number = "15–45µm"
@@ -39,25 +39,25 @@ theme = "printwire-theme"
 [[params.services]]
   title = "Titanium Powders"
   icon  = "◎"
-  image = "https://images.unsplash.com/photo-1685708716815-94c588417c27?w=600&q=80"
+  image       = "/images/app-aerospace.png"
   short = "Ti6Al4V ELI and Grade 2 commercially pure titanium in 15–45µm (DMLS) and 45–105µm (EBM) distributions."
 
 [[params.services]]
   title = "Steel & Stainless Powders"
   icon  = "⬡"
-  image = "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=600&q=80"
+  image       = "/images/app-medical.png"
   short = "316L, 17-4 PH, M2 tool steel, H13, and maraging steel (MS1/18Ni300) for tooling and structural DMLS applications."
 
 [[params.services]]
   title = "Aluminum & Nickel Powders"
   icon  = "✦"
-  image = "https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=600&q=80"
+  image       = "/images/app-industrial.png"
   short = "AlSi10Mg, Al6061, Inconel 718, Inconel 625, and Hastelloy X for lightweight and high-temperature DMLS applications."
 
 [[params.services]]
   title = "CoCr & Specialty Alloys"
   icon  = "◈"
-  image = "https://images.unsplash.com/photo-1504473089979-b1c4993a9653?w=600&q=80"
+  image       = "/images/app-energy.png"
   short = "CoCrMo for dental and orthopedic implants, copper (CuCr1Zr) for thermal applications, and precious metals on request."
 
 [markup.goldmark.renderer]
