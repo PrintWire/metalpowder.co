@@ -1,0 +1,37 @@
+{{ define "main" }}
+<section class="page-hero">
+    <div class="container">
+        <div class="hero-badge">ARTICLES</div>
+        <h1>Metal 3D Printing <span class="gradient-text">Insights</span></h1>
+        <p class="hero-subtitle">Expert analysis, industry trends, and technical deep-dives into metal additive manufacturing</p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="news-grid">
+            {{ range .Pages.ByPublishDate.Reverse }}
+            <article class="news-card fade-in">
+                <div class="news-card-content">
+                    <div class="news-card-meta">
+                        <span class="news-date">{{ .Date.Format "January 2, 2006" }}</span>
+                        {{ with .Params.tags }}
+                        {{ range first 2 . }}
+                        <span class="news-tag">{{ . }}</span>
+                        {{ end }}
+                        {{ end }}
+                    </div>
+                    <h3 class="news-card-title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+                    <p class="news-card-excerpt">{{ .Summary | truncate 160 }}</p>
+                    <a href="{{ .RelPermalink }}" class="news-card-link">Read More &rarr;</a>
+                </div>
+            </article>
+            {{ else }}
+            <div style="grid-column: 1 / -1; text-align: center; padding: 4rem 0;">
+                <p style="color: #9ca3af; font-size: 1.1rem;">Articles coming soon. Check back for metal 3D printing insights.</p>
+            </div>
+            {{ end }}
+        </div>
+    </div>
+</section>
+{{ end }}

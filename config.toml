@@ -1,0 +1,16 @@
+baseURL = "https://metalpowder.co/"
+languageCode = "en-us"
+title = "Metal Powder"
+
+[params]
+  description = "Premium metal powders for DMLS, SLM, and advanced additive manufacturing"
+  siteName = "Metal Powder"
+  tagline = "Premium Metal Powders for Advanced Manufacturing"
+
+[taxonomies]
+  tag = "tags"
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
