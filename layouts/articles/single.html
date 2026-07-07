@@ -1,32 +1,28 @@
+{{ define "breadcrumb" }}<a href="/articles/">Articles</a> <span>/</span> {{ .Title }}{{ end }}
 {{ define "main" }}
-<section class="page-hero">
-    <div class="container">
-        <div class="hero-badge">ARTICLE</div>
-        <h1>{{ .Title }}</h1>
-        <p class="hero-subtitle">
-            <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 2, 2006" }}</time>
-            {{ with .Params.author }} &middot; {{ . }}{{ end }}
-        </p>
+<div class="ed-content-narrow">
+  <div class="ed-section">
+    {{ with .Params.tags }}
+    <div style="margin-bottom: 1rem;">
+      {{ range . }}
+      <span class="ed-badge" style="margin-right: 0.5rem;">{{ . }}</span>
+      {{ end }}
     </div>
-</section>
+    {{ end }}
 
-<section class="section">
-    <div class="container" style="max-width: 800px;">
-        {{ with .Params.tags }}
-        <div style="margin-bottom: 2rem;">
-            {{ range . }}
-            <span class="news-tag" style="margin-right: 0.5rem;">{{ . }}</span>
-            {{ end }}
-        </div>
-        {{ end }}
-
-        <div class="article-content">
-            {{ .Content }}
-        </div>
-
-        <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1);">
-            <a href="/articles/" style="color: #00d9ff; text-decoration: none;">&larr; Back to Articles</a>
-        </div>
+    <h1 style="margin-bottom: 0.5rem;">{{ .Title }}</h1>
+    <div class="ed-card-meta" style="margin-bottom: 2rem;">
+      <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 2, 2006" }}</time>
+      {{ with .Params.author }} &middot; {{ . }}{{ end }}
     </div>
-</section>
+
+    <div class="article-content">
+      {{ .Content }}
+    </div>
+
+    <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border);">
+      <a href="/articles/" style="color: var(--accent); text-decoration: none;">&larr; Back to Articles</a>
+    </div>
+  </div>
+</div>
 {{ end }}
