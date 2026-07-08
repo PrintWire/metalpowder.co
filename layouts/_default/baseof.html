@@ -34,7 +34,7 @@
 <header class="ed-header">
   <div class="ed-header-inner">
     <a href="/" class="ed-logo">
-      {{ .Site.Params.siteName }}
+      {{ .Site.Params.logoHtml | default .Site.Params.siteName | safeHTML }}
     </a>
     <button class="ed-nav-toggle" aria-label="Menu" onclick="document.querySelector('.ed-nav').classList.toggle('open')">&#9776;</button>
     <nav class="ed-nav">
@@ -61,7 +61,7 @@
 <footer class="ed-footer">
   <div class="ed-footer-inner">
     <div class="ed-footer-brand">
-      <div class="ed-logo">{{ .Site.Params.siteName }}</div>
+      <div class="ed-logo">{{ .Site.Params.logoHtml | default .Site.Params.siteName | safeHTML }}</div>
       <p>{{ .Site.Params.description }} Part of the PrintWire network.</p>
     </div>
     <div>

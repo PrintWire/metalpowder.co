@@ -5,6 +5,7 @@ title = "METAL POWDER"
 [params]
   description = "Metal powder supply, specifications, and additive manufacturing feedstock intelligence. The source for metal powder procurement."
   siteName = "METAL POWDER"
+logoHtml = 'METAL<span class="ed-logo-accent">POWDER</span>'
   tagline = "The authoritative source for metal powder and AM feedstock"
 
 [taxonomies]
