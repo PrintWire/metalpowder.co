@@ -1,0 +1,8 @@
+{{- $arts := where site.RegularPages "Section" "articles" -}}
+{{- $arts = sort $arts "Date" "desc" -}}
+[
+{{- range $i, $p := (first 24 $arts) }}
+{{- if $i }},{{ end }}
+{"title": {{ $p.Title | jsonify }}, "url": {{ $p.RelPermalink | jsonify }}, "date": {{ $p.Date.Format "Jan 2, 2006" | jsonify }}, "iso": {{ $p.Date.Format "2006-01-02" | jsonify }}, "summary": {{ ($p.Description | default ($p.Summary | plainify | truncate 150)) | jsonify }}}
+{{- end }}
+]
