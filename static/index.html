@@ -78,6 +78,15 @@
       </div>
     </div>
 
+    <!-- PrintWire Originals — our own articles (featured) -->
+    <div class="ed-section-label" style="border-left:3px solid var(--accent);padding-left:0.6rem;">
+      PrintWire Originals
+      <a href="/articles/">View All &rarr;</a>
+    </div>
+    <div class="ed-card-grid" id="pwOriginals">
+      <div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--text-faint);">Loading PrintWire articles…</div>
+    </div>
+
     <!-- Latest News — Live RSS Feed -->
     <div class="ed-section-label">
       Latest News
@@ -332,10 +341,10 @@ document.querySelector('.ed-nav-toggle')?.addEventListener('click', () => {
   });
 })();
 
-// ── RSS News Feed ──
+// ── News Feed: PrintWire Originals + industry RSS ──
 (function() {
   var grid = document.getElementById('newsGrid');
-  if (!grid) return;
+  var orig = document.getElementById('pwOriginals');
 
   var feeds = [
     { url: 'https://news.google.com/rss/search?q=metal+3d+printing+additive+manufacturing&hl=en-US&gl=US&ceid=US:en', name: 'Google News' },
@@ -346,7 +355,8 @@ document.querySelector('.ed-nav-toggle')?.addEventListener('click', () => {
   ];
 
   var api = 'https://api.rss2json.com/v1/api.json?rss_url=';
-  var articles = [];
+  var rss = [];
+  var localArts = [];
   var loaded = 0;
   var total = feeds.length;
   var fallbackImgs = [
@@ -354,32 +364,6 @@ document.querySelector('.ed-nav-toggle')?.addEventListener('click', () => {
     'images/10-dmls-machine-interior.png','images/08-medical-implant.png','images/18-powder-handling.png',
     'images/01-titanium-turbine.png','images/11-ded-nozzle-closeup.png'
   ];
-
-  var timeout = setTimeout(function() { render(); }, 8000);
-
-  feeds.forEach(function(feed) {
-    fetch(api + encodeURIComponent(feed.url))
-      .then(function(r) { return r.json(); })
-      .then(function(data) {
-        if (data.status === 'ok' && data.items) {
-          data.items.forEach(function(item) {
-            articles.push({
-              title: item.title,
-              link: item.link,
-              desc: stripHtml(item.description).substring(0,140) + '…',
-              date: item.pubDate,
-              img: item.thumbnail || (item.enclosure && item.enclosure.link) || '',
-              source: feed.name
-            });
-          });
-        }
-      })
-      .catch(function(){})
-      .then(function() {
-        loaded++;
-        if (loaded === total) { clearTimeout(timeout); render(); }
-      });
-  });
 
   function stripHtml(html) {
     var d = document.createElement('div'); d.innerHTML = html;
@@ -389,31 +373,73 @@ document.querySelector('.ed-nav-toggle')?.addEventListener('click', () => {
     var d = document.createElement('div'); d.appendChild(document.createTextNode(s));
     return d.innerHTML;
   }
+  function card(a, i) {
+    var img = a.img || fallbackImgs[i % fallbackImgs.length];
+    var fb = fallbackImgs[(i+1) % fallbackImgs.length];
+    var open = a.local
+      ? 'onclick="location.href=\'' + esc(a.link) + '\'"'
+      : 'onclick="window.open(\'' + esc(a.link) + '\',\'_blank\',\'noopener\')"';
+    var linkAttrs = a.local ? 'href="' + esc(a.link) + '"'
+      : 'href="' + esc(a.link) + '" target="_blank" rel="noopener"';
+    var badge = a.local
+      ? '<span class="ed-badge" style="background:var(--accent);color:#000;">' + esc(a.source) + '</span>'
+      : '<span class="ed-badge">' + esc(a.source) + '</span>';
+    return '<article class="ed-card" style="cursor:pointer" ' + open + '>' +
+      '<img class="ed-card-img" src="' + esc(img) + '" alt="" loading="lazy" onerror="this.onerror=null;this.src=\'' + fb + '\'">' +
+      '<div class="ed-card-body">' + badge +
+        '<div class="ed-card-meta">' + esc(a.dateStr || '') + '</div>' +
+        '<h3><a ' + linkAttrs + ' onclick="event.stopPropagation()">' + esc(a.title) + '</a></h3>' +
+        '<p class="ed-card-excerpt">' + esc(a.desc) + '</p>' +
+      '</div></article>';
+  }
 
-  function render() {
-    if (!articles.length) {
-      grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--text-faint);">Unable to load news feeds.</div>';
-      return;
-    }
+  // 1) PrintWire's own articles (local JSON feed) — powers the featured section AND merges into the grid
+  var localReady = fetch('index.json', { cache: 'no-store' })
+    .then(function(r){ return r.ok ? r.json() : []; })
+    .then(function(items){
+      (items || []).forEach(function(it, i){
+        localArts.push({ title: it.title, link: it.url, desc: it.summary || '',
+          date: it.iso, dateStr: it.date, source: 'PrintWire', local: true,
+          img: fallbackImgs[i % fallbackImgs.length] });
+      });
+      if (orig) {
+        orig.innerHTML = localArts.length
+          ? localArts.slice(0, 6).map(card).join('')
+          : '<div style="grid-column:1/-1;padding:1.5rem;color:var(--text-faint);">New PrintWire articles will appear here as they publish.</div>';
+      }
+    })
+    .catch(function(){ if (orig) orig.innerHTML = ''; });
 
-    articles.sort(function(a,b){ return new Date(b.date) - new Date(a.date); });
-    var top = articles.slice(0, 8);
-    var html = '';
-    top.forEach(function(a, i) {
-      var d = new Date(a.date);
-      var ds = d.toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'});
-      var img = a.img || fallbackImgs[i % fallbackImgs.length];
-      var fb = fallbackImgs[(i+1) % fallbackImgs.length];
-      html += '<article class="ed-card" style="cursor:pointer" onclick="window.open(\'' + esc(a.link) + '\',\'_blank\',\'noopener\')">' +
-        '<img class="ed-card-img" src="' + esc(img) + '" alt="" loading="lazy" onerror="this.onerror=null;this.src=\'' + fb + '\'">' +
-        '<div class="ed-card-body">' +
-          '<span class="ed-badge">' + esc(a.source) + '</span>' +
-          '<div class="ed-card-meta">' + ds + '</div>' +
-          '<h3><a href="' + esc(a.link) + '" target="_blank" rel="noopener" onclick="event.stopPropagation()">' + esc(a.title) + '</a></h3>' +
-          '<p class="ed-card-excerpt">' + esc(a.desc) + '</p>' +
-        '</div></article>';
-    });
-    grid.innerHTML = html;
+  // 2) Industry RSS
+  var timeout = setTimeout(finish, 8000);
+  feeds.forEach(function(feed) {
+    fetch(api + encodeURIComponent(feed.url))
+      .then(function(r){ return r.json(); })
+      .then(function(data){
+        if (data.status === 'ok' && data.items) {
+          data.items.forEach(function(item){
+            rss.push({ title: item.title, link: item.link,
+              desc: stripHtml(item.description).substring(0,140) + '…',
+              date: item.pubDate, source: feed.name, local: false,
+              img: item.thumbnail || (item.enclosure && item.enclosure.link) || '' });
+          });
+        }
+      })
+      .catch(function(){})
+      .then(function(){ loaded++; if (loaded === total) { clearTimeout(timeout); finish(); } });
+  });
+
+  var done = false;
+  function finish(){ if (done) return; done = true; localReady.then(render); }
+  function render(){
+    if (!grid) return;
+    var merged = localArts.concat(rss);
+    merged.forEach(function(a){ if (!a.dateStr && a.date) a.dateStr = new Date(a.date).toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'}); });
+    merged.sort(function(a,b){ return new Date(b.date) - new Date(a.date); });
+    var top = merged.slice(0, 8);
+    grid.innerHTML = top.length
+      ? top.map(card).join('')
+      : '<div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--text-faint);">Unable to load news.</div>';
   }
 })();
 </script>
