@@ -394,12 +394,12 @@ document.querySelector('.ed-nav-toggle')?.addEventListener('click', () => {
   }
 
   // 1) PrintWire's own articles (local JSON feed) — powers the featured section AND merges into the grid
-  var localReady = fetch('index.json', { cache: 'no-store' })
+  var localReady = fetch('network.json', { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.json() : []; })
     .then(function(items){
       (items || []).forEach(function(it, i){
         localArts.push({ title: it.title, link: it.url, desc: it.summary || '',
-          date: it.iso, dateStr: it.date, source: 'PrintWire', local: true,
+          date: it.iso, dateStr: it.date, source: (it.origin || 'PrintWire'), local: true,
           img: fallbackImgs[i % fallbackImgs.length] });
       });
       if (orig) {
