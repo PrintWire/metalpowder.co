@@ -29,6 +29,10 @@
   .article-content img { max-width: 100%; border-radius: var(--radius); margin: 1.5rem 0; }
   </style>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  {{ $og := ((.Params.image | default .Site.Params.ogImage) | absURL) }}
+  <meta property="og:image" content="{{ $og }}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="{{ $og }}">
 </head>
 <body>
 

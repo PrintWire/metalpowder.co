@@ -3,6 +3,7 @@ languageCode = "en-us"
 title = "METAL POWDER"
 
 [params]
+ogImage       = "/images/13-batch-build-plate-overhead.png"
   description = "Metal powder supply, specifications, and additive manufacturing feedstock intelligence. The source for metal powder procurement."
   siteName = "METAL POWDER"
 logoHtml = 'METAL<span class="ed-logo-accent">POWDER</span>'
