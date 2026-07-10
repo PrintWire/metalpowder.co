@@ -451,6 +451,10 @@ document.querySelector('.ed-nav-toggle')?.addEventListener('click', () => {
     var merged = localArts.concat(rss);
     merged.forEach(function(a){ if (!a.dateStr && a.date) a.dateStr = new Date(a.date).toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'}); });
     merged.sort(function(a,b){ return new Date(b.date) - new Date(a.date); });
+    var dh=0;for(var i=0;i<location.hostname.length;i++)dh=(dh*31+location.hostname.charCodeAt(i))&0xffff;
+    var day=Math.floor(Date.now()/86400000);
+    var off=(dh+day)%Math.max(merged.length,1);
+    merged=merged.slice(off).concat(merged.slice(0,off));
     var top = merged.slice(0, 8);
     grid.innerHTML = top.length
       ? top.map(card).join('')
