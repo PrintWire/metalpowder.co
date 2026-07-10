@@ -359,6 +359,16 @@ document.querySelector('.ed-nav-toggle')?.addEventListener('click', () => {
     { url: 'https://3dprintingindustry.com/feed/', name: '3DPI' }
   ];
 
+    function bestImg(item){
+    var raw = '';
+    var html = item.content || item.description || '';
+    var m = html.match(/<img[^>]+src=["']([^"'>]+)["']/i);
+    if (m) raw = m[1];
+    if (!raw) raw = (item.enclosure && item.enclosure.link) || item.thumbnail || '';
+    if (!raw) return '';
+    var full = raw.replace(/-\d{2,4}x\d{2,4}(?=\.(jpg|jpeg|png|webp|gif)(\?|$))/i, '');
+    return 'https://wsrv.nl/?url=' + encodeURIComponent(full) + '&w=800&h=534&fit=cover&a=attention&output=jpg&q=82';
+  }
   var api = 'https://api.rss2json.com/v1/api.json?rss_url=';
   var rss = [];
   var localArts = [];
@@ -426,7 +436,7 @@ document.querySelector('.ed-nav-toggle')?.addEventListener('click', () => {
             rss.push({ title: item.title, link: item.link,
               desc: stripHtml(item.description).substring(0,140) + '…',
               date: item.pubDate, source: feed.name, local: false,
-              img: item.thumbnail || (item.enclosure && item.enclosure.link) || '' });
+              img: bestImg(item) });
           });
         }
       })
