@@ -107,36 +107,10 @@
     <!-- More Stories — List Format -->
     <div class="ed-section-label">
       Analysis &amp; Deep Dives
-      <a href="#">View All &rarr;</a>
+      <a href="/articles/">View All &rarr;</a>
     </div>
-    <div class="ed-list">
-      <article class="ed-list-item">
-        <img src="images/01-titanium-turbine.png" alt="Topology-optimized aerospace bracket">
-        <div>
-          <span class="ed-badge">Aerospace</span>
-          <div class="ed-card-meta">April 22, 2026 · 8 min read</div>
-          <h3><a href="#">Why Boeing Shifted From Casting to DMLS for 787 Nacelle Brackets — And What It Means for the Supply Chain</a></h3>
-          <p class="ed-card-excerpt">The decision to consolidate 17 cast parts into 3 printed components saved 4.2kg per aircraft — but the real story is what it does to Tier 2 suppliers.</p>
-        </div>
-      </article>
-      <article class="ed-list-item">
-        <img src="images/20-raw-vs-finished.png" alt="Inconel 718 impeller">
-        <div>
-          <span class="ed-badge">Materials</span>
-          <div class="ed-card-meta">April 20, 2026 · 7 min read</div>
-          <h3><a href="#">Inconel 718 vs. Haynes 282: Choosing the Right Superalloy for High-Temperature Metal AM</a></h3>
-          <p class="ed-card-excerpt">Both survive 700°C+, but their printability, post-processing requirements, and fatigue performance diverge significantly. A materials engineer's comparison.</p>
-        </div>
-      </article>
-      <article class="ed-list-item">
-        <img src="images/11-ded-nozzle-closeup.png" alt="Conformal cooling insert">
-        <div>
-          <span class="ed-badge">Industrial</span>
-          <div class="ed-card-meta">April 18, 2026 · 10 min read</div>
-          <h3><a href="#">Conformal Cooling 2026: The ROI Data From 200+ Injection Mold Inserts</a></h3>
-          <p class="ed-card-excerpt">We aggregated cycle-time data from 14 service bureaus. The average reduction: 32%. But the variance tells a more interesting story.</p>
-        </div>
-      </article>
+    <div class="ed-list" id="pwDeepDives">
+      <div style="padding:1.5rem;color:var(--text-faint);">Loading analysis…</div>
     </div>
 
     <!-- Industries Section -->
@@ -460,6 +434,31 @@ document.querySelector('.ed-nav-toggle')?.addEventListener('click', () => {
       ? top.map(card).join('')
       : '<div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--text-faint);">Unable to load news.</div>';
   }
+})();
+
+// -- Analysis & Deep Dives: PrintWire catalog in list format --
+(function(){
+  var box = document.getElementById('pwDeepDives');
+  if (!box) return;
+  function esc(s){var d=document.createElement('div');d.appendChild(document.createTextNode(s==null?'':s));return d.innerHTML;}
+  var empty = '<div style="padding:1.5rem;color:var(--text-faint);">In-depth analysis and deep dives are on the way — check back soon.</div>';
+  fetch('network.json',{cache:'no-store'})
+    .then(function(r){ return r.ok ? r.json() : []; })
+    .then(function(items){
+      items = (items || []).slice();
+      items.sort(function(a,b){ return (b.iso||'').localeCompare(a.iso||''); });
+      if (!items.length){ box.innerHTML = empty; return; }
+      box.innerHTML = items.slice(0,8).map(function(a){
+        var img = a.img ? '<img src="'+esc(a.img)+'" alt="" loading="lazy">' : '';
+        var meta = esc(a.date||'') + (a.origin ? ' · '+esc(a.origin) : '');
+        return '<article class="ed-list-item">'+img+'<div>'+
+          '<div class="ed-card-meta">'+meta+'</div>'+
+          '<h3><a href="'+esc(a.url)+'">'+esc(a.title)+'</a></h3>'+
+          '<p class="ed-card-excerpt">'+esc(a.summary||'')+'</p>'+
+          '</div></article>';
+      }).join('');
+    })
+    .catch(function(){ box.innerHTML = empty; });
 })();
 </script>
 </body>
